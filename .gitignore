@@ -1,0 +1,5 @@
+*.pyc
+Ui*.py
+.eric4project/
+.ropeproject/
+mitglied.e4p

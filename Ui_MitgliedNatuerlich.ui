@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MitgliedNatuerlich</class>
+ <widget class="QWidget" name="MitgliedNatuerlich">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>293</width>
+    <height>457</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>&amp;Anrede</string>
+       </property>
+       <property name="buddy">
+        <cstring>cbxAnrede</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QComboBox" name="cbxAnrede"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_16">
+       <property name="text">
+        <string>&amp;Titel</string>
+       </property>
+       <property name="buddy">
+        <cstring>txlTitel</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="txlTitel"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>&amp;Vorname</string>
+       </property>
+       <property name="buddy">
+        <cstring>txlVorname</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="txlVorname"/>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>&amp;Nachname</string>
+       </property>
+       <property name="buddy">
+        <cstring>txlName</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="txlName"/>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Namens&amp;zusatz</string>
+       </property>
+       <property name="buddy">
+        <cstring>txlNamenszusatz</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="txlNamenszusatz"/>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>&amp;Geburtsdatum</string>
+       </property>
+       <property name="buddy">
+        <cstring>dateGeburtsdatum</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QDateEdit" name="dateGeburtsdatum">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="displayFormat">
+        <string>dd.MM.yyyy</string>
+       </property>
+       <property name="calendarPopup">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Beruf</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLineEdit" name="txlBeruf"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_8">
+     <property name="text">
+      <string>zugehöriges Hauptmitglied</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLineEdit" name="txlHauptmitglied">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnShowHauptmitglied">
+       <property name="toolTip">
+        <string>Hauptmitglied anzeigen</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icons/view_detailed.png</normaloff>:/icons/view_detailed.png</iconset>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_19">
+     <property name="text">
+      <string>Hinweise</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPlainTextEdit" name="txtHinweise"/>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>cbxAnrede</tabstop>
+  <tabstop>txlTitel</tabstop>
+  <tabstop>txlVorname</tabstop>
+  <tabstop>txlName</tabstop>
+  <tabstop>txlNamenszusatz</tabstop>
+  <tabstop>dateGeburtsdatum</tabstop>
+  <tabstop>txlBeruf</tabstop>
+  <tabstop>txlHauptmitglied</tabstop>
+  <tabstop>btnShowHauptmitglied</tabstop>
+ </tabstops>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

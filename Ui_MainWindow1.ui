@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>647</width>
+    <height>482</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Mitgliederverwaltung</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <widget class="QTabWidget" name="tabMitglied">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <property name="tabsClosable">
+       <bool>true</bool>
+      </property>
+      <property name="movable">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="defaultTab">
+       <attribute name="icon">
+        <iconset resource="resources.qrc">
+         <normaloff>:/icons/identity_ok.png</normaloff>:/icons/identity_ok.png</iconset>
+       </attribute>
+       <attribute name="title">
+        <string>Vorname Nachname</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3"/>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>647</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="mnuDatei">
+    <property name="title">
+     <string>&amp;Datei</string>
+    </property>
+    <widget class="QMenu" name="mnuEinstellungen">
+     <property name="title">
+      <string>Einstellungen</string>
+     </property>
+     <widget class="QMenu" name="mnuMitglied_Adresse">
+      <property name="title">
+       <string>Mitglied</string>
+      </property>
+      <addaction name="actErweiterteSuche"/>
+      <addaction name="actAnrede"/>
+     </widget>
+     <widget class="QMenu" name="mnuMitgliedschaft">
+      <property name="title">
+       <string>Mitgliedschaft</string>
+      </property>
+      <addaction name="actBeitragsgruppe"/>
+      <addaction name="actMitgliedsgruppe"/>
+      <addaction name="actAustrittsgrund"/>
+      <addaction name="actZahlungsart"/>
+      <addaction name="actZahlweise"/>
+     </widget>
+     <widget class="QMenu" name="mnuKontakt">
+      <property name="title">
+       <string>Kontakt</string>
+      </property>
+      <addaction name="actHinweisEMail"/>
+      <addaction name="actHinweisTelFax"/>
+     </widget>
+     <widget class="QMenu" name="mnuZahlung">
+      <property name="title">
+       <string>Zahlung</string>
+      </property>
+      <addaction name="actBank"/>
+      <addaction name="actHinweisZahlung"/>
+     </widget>
+     <widget class="QMenu" name="menuDatenbank">
+      <property name="title">
+       <string>Datenbank</string>
+      </property>
+      <addaction name="actVerbindung"/>
+      <addaction name="actInitialisieren"/>
+     </widget>
+     <widget class="QMenu" name="menuSchreiben">
+      <property name="title">
+       <string>Schreiben</string>
+      </property>
+      <addaction name="actSpeicherpfad"/>
+     </widget>
+     <widget class="QMenu" name="menuAdresse">
+      <property name="title">
+       <string>Adresse</string>
+      </property>
+      <addaction name="actOrt"/>
+      <addaction name="actLand"/>
+     </widget>
+     <widget class="QMenu" name="menuMailserver">
+      <property name="title">
+       <string>Mailserver</string>
+      </property>
+      <addaction name="actSMTP"/>
+     </widget>
+     <addaction name="mnuMitglied_Adresse"/>
+     <addaction name="menuAdresse"/>
+     <addaction name="mnuMitgliedschaft"/>
+     <addaction name="mnuKontakt"/>
+     <addaction name="mnuZahlung"/>
+     <addaction name="menuSchreiben"/>
+     <addaction name="separator"/>
+     <addaction name="menuDatenbank"/>
+     <addaction name="menuMailserver"/>
+    </widget>
+    <addaction name="mnuEinstellungen"/>
+    <addaction name="separator"/>
+    <addaction name="actBeenden"/>
+   </widget>
+   <widget class="QMenu" name="menuMitglied">
+    <property name="title">
+     <string>&amp;Mitglied</string>
+    </property>
+    <addaction name="actMitgliedNeu"/>
+    <addaction name="actMitgliedFinden"/>
+   </widget>
+   <widget class="QMenu" name="menuAusgaben">
+    <property name="title">
+     <string>&amp;Schreiben</string>
+    </property>
+    <widget class="QMenu" name="menuSpezial">
+     <property name="title">
+      <string>Spezial</string>
+     </property>
+     <addaction name="actSpendenbescheinigung"/>
+     <addaction name="actMahnung"/>
+    </widget>
+    <addaction name="actSchreibenVerfassen"/>
+    <addaction name="menuSpezial"/>
+   </widget>
+   <addaction name="mnuDatei"/>
+   <addaction name="menuMitglied"/>
+   <addaction name="menuAusgaben"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QDockWidget" name="dockMitglieder">
+   <property name="windowTitle">
+    <string>Mitglieder</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout_4">
+     <item>
+      <widget class="QTabWidget" name="tabWidget">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>150</height>
+        </size>
+       </property>
+       <property name="currentIndex">
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="tabSuche">
+        <attribute name="title">
+         <string>Suche</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QLineEdit" name="txlFindeMitglied">
+             <property name="toolTip">
+              <string>Name oder Mitgliedsnummer eingeben</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="btnFindeMitglied">
+             <property name="contextMenuPolicy">
+              <enum>Qt::CustomContextMenu</enum>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="resources.qrc">
+               <normaloff>:/icons/find.png</normaloff>:/icons/find.png</iconset>
+             </property>
+             <property name="flat">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>64</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tabErweitert">
+        <attribute name="title">
+         <string>Erweitert</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <widget class="QListWidget" name="lstKriteriumUnd"/>
+         </item>
+        </layout>
+       </widget>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTableView" name="tblMitglieder">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="dragEnabled">
+        <bool>true</bool>
+       </property>
+       <property name="dragDropMode">
+        <enum>QAbstractItemView::DragOnly</enum>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectRows</enum>
+       </property>
+       <property name="sortingEnabled">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+    <zorder>tblMitglieder</zorder>
+    <zorder>tabWidget</zorder>
+   </widget>
+  </widget>
+  <action name="actBeenden">
+   <property name="text">
+    <string>&amp;beenden</string>
+   </property>
+  </action>
+  <action name="actMitgliedFinden">
+   <property name="text">
+    <string>&amp;Finden</string>
+   </property>
+  </action>
+  <action name="actMitgliedNeu">
+   <property name="text">
+    <string>&amp;Aufnehmen</string>
+   </property>
+  </action>
+  <action name="actSchreibenVerfassen">
+   <property name="text">
+    <string>&amp;Verfassen</string>
+   </property>
+  </action>
+  <action name="actionBla">
+   <property name="text">
+    <string>bla</string>
+   </property>
+  </action>
+  <action name="actionOrte">
+   <property name="text">
+    <string>Ort</string>
+   </property>
+  </action>
+  <action name="actionBeitragsgruppe">
+   <property name="text">
+    <string>Beitragsgruppe</string>
+   </property>
+  </action>
+  <action name="actionMitgliedsgruppe">
+   <property name="text">
+    <string>Mitgliedsgruppe</string>
+   </property>
+  </action>
+  <action name="actionAustrittsgrund">
+   <property name="text">
+    <string>Austrittsgrund</string>
+   </property>
+  </action>
+  <action name="actionZahlungsart">
+   <property name="text">
+    <string>Zahlungsart</string>
+   </property>
+  </action>
+  <action name="actionAnrede_2">
+   <property name="text">
+    <string>Anrede</string>
+   </property>
+  </action>
+  <action name="actionOrt">
+   <property name="text">
+    <string>Ort</string>
+   </property>
+  </action>
+  <action name="actionLand">
+   <property name="text">
+    <string>Land</string>
+   </property>
+  </action>
+  <action name="actionEMail">
+   <property name="text">
+    <string>EMail</string>
+   </property>
+  </action>
+  <action name="actionTelefon_Fax">
+   <property name="text">
+    <string>Hinweise Telefon/Fax</string>
+   </property>
+  </action>
+  <action name="actionBank">
+   <property name="text">
+    <string>Bank</string>
+   </property>
+  </action>
+  <action name="actAnrede">
+   <property name="text">
+    <string>Anrede</string>
+   </property>
+  </action>
+  <action name="actBeitragsgruppe">
+   <property name="text">
+    <string>Beitragsgruppen</string>
+   </property>
+  </action>
+  <action name="actMitgliedsgruppe">
+   <property name="text">
+    <string>Mitgliedsgruppen</string>
+   </property>
+  </action>
+  <action name="actAustrittsgrund">
+   <property name="text">
+    <string>Austrittsgrund</string>
+   </property>
+  </action>
+  <action name="actZahlungsart">
+   <property name="text">
+    <string>Zahlungsart</string>
+   </property>
+  </action>
+  <action name="actHinweisEMail">
+   <property name="text">
+    <string>Hinweis EMail</string>
+   </property>
+  </action>
+  <action name="actHinweisTelFax">
+   <property name="text">
+    <string>Hinweis Tel/Fax</string>
+   </property>
+  </action>
+  <action name="actBank">
+   <property name="text">
+    <string>Bank</string>
+   </property>
+  </action>
+  <action name="actHinweisZahlung">
+   <property name="text">
+    <string>Hinweis Zahlung</string>
+   </property>
+  </action>
+  <action name="actVerbindung">
+   <property name="text">
+    <string>Verbindung</string>
+   </property>
+  </action>
+  <action name="actInitialisieren">
+   <property name="text">
+    <string>Initialisieren</string>
+   </property>
+  </action>
+  <action name="actZahlweise">
+   <property name="text">
+    <string>Zahlweise</string>
+   </property>
+  </action>
+  <action name="actArt">
+   <property name="text">
+    <string>Art</string>
+   </property>
+  </action>
+  <action name="actSpendenbescheinigung">
+   <property name="text">
+    <string>Spendenbescheinigung</string>
+   </property>
+  </action>
+  <action name="actMahnung">
+   <property name="text">
+    <string>Mahnung</string>
+   </property>
+  </action>
+  <action name="actSpeicherpfad">
+   <property name="text">
+    <string>Speicherpfad</string>
+   </property>
+  </action>
+  <action name="actErweiterteSuche">
+   <property name="text">
+    <string>Erweiterte Suche</string>
+   </property>
+  </action>
+  <action name="actOrt">
+   <property name="text">
+    <string>Ort</string>
+   </property>
+  </action>
+  <action name="actLand">
+   <property name="text">
+    <string>Land</string>
+   </property>
+  </action>
+  <action name="actSMTP">
+   <property name="text">
+    <string>Postausgangsserver (SMTP)</string>
+   </property>
+  </action>
+ </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>btnFindeMitglied</tabstop>
+  <tabstop>tabMitglied</tabstop>
+  <tabstop>txlFindeMitglied</tabstop>
+  <tabstop>lstKriteriumUnd</tabstop>
+  <tabstop>tblMitglieder</tabstop>
+ </tabstops>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections/>
+</ui>

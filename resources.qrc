@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="/" >
+    <file>icons/find.png</file>
+    <file>icons/view_detailed.png</file>
+    <file>icons/identity_ok.png</file>
+    <file>icons/identity_notsaved.png</file>
+  </qresource>
+</RCC>
