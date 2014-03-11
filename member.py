@@ -376,7 +376,7 @@ class MemberData(QtGui.QWidget):
                     self.ui.txlStrasse, self.ui.txlHnr, self.ui.txlHnrZusatz,
                     self.ui.txlAdresszusatz, self.ui.txlIndividuellerBeitrag,
                     self.ui.txlKontonummer, self.ui.txlBlz, self.ui.txlInstitut,
-                    self.ui.txlKontoInhaber]:
+                    self.ui.txlKontoInhaber,  self.ui.txlIban,  self.ui.txlBic]:
             QtCore.QObject.connect(txl,
                                    QtCore.SIGNAL("editingFinished()"),
                                    self.txlHasChanged)
@@ -886,6 +886,8 @@ class MemberData(QtGui.QWidget):
             self.manageAustrittsdatum(self.mitglied.austrittsdatum)
             self.leaveEmptyOnNone(self.ui.txlKontonummer, self.intToString(self.mitglied.kontonummer))
             self.leaveEmptyOnNone(self.ui.txlKontoInhaber, self.mitglied.kontoinhaber)
+            self.leaveEmptyOnNone(self.ui.txlIban, self.mitglied.iban)
+            self.leaveEmptyOnNone(self.ui.txlBic, self.mitglied.bic)
             bank = self.mitglied.bank
 
             if bank:
@@ -991,7 +993,9 @@ class MemberData(QtGui.QWidget):
                     bank = datamodel.Bank(blz=blz, bank = self.nonify(self.ui.txlInstitut))
             else:
                 bank = None
-
+            
+            iban = self.nonify(self.ui.txlIban)
+            bic = self.nonify(self.ui.txlBic)
             einzugsermaechtigungsDatum = self.ui.dateEinzugsermaechtigung.date()
 
             if einzugsermaechtigungsDatum == QtCore.QDate():
@@ -1052,6 +1056,8 @@ class MemberData(QtGui.QWidget):
             self.mitglied.kontonummer = kontonummer
             self.mitglied.kontoinhaber = kontoinhaber
             self.mitglied.bank = bank
+            self.mitglied.iban = iban
+            self.mitglied.bic = bic
             self.mitglied.einzugsermaechtigungsdatum = einzugsermaechtigungsDatum
 
         self.mitglied.mitgliedsgruppe = mitgliedsgruppe

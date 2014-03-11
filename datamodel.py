@@ -142,6 +142,8 @@ class Mitglied(elixir.Entity):
     kontonummer = elixir.Field(elixir.Integer)
     kontoinhaber = elixir.Field(elixir.Unicode(255))
     bank = elixir.ManyToOne('Bank')
+    iban = elixir.Field(elixir.Unicode(32))
+    bic = elixir.Field(elixir.Unicode(16))
     emailadressen = elixir.OneToMany('EmailAdresse')
     telefonfaxnummern = elixir.OneToMany('TelefonFax')
     zahlungen = elixir.OneToMany('Zahlung')

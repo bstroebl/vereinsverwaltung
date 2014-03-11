@@ -57,8 +57,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>471</width>
-        <height>530</height>
+        <width>290</width>
+        <height>295</height>
        </rect>
       </property>
       <attribute name="label">
@@ -204,8 +204,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>471</width>
-        <height>530</height>
+        <width>141</width>
+        <height>148</height>
        </rect>
       </property>
       <attribute name="label">
@@ -263,8 +263,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>471</width>
-        <height>530</height>
+        <width>363</width>
+        <height>344</height>
        </rect>
       </property>
       <attribute name="label">
@@ -431,14 +431,17 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>446</width>
-        <height>517</height>
+        <width>438</width>
+        <height>530</height>
        </rect>
       </property>
       <attribute name="label">
        <string>Bankverbindung</string>
       </attribute>
       <layout class="QFormLayout" name="formLayout_3">
+       <property name="fieldGrowthPolicy">
+        <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+       </property>
        <item row="0" column="0">
         <widget class="QLabel" name="label_8">
          <property name="text">
@@ -449,48 +452,48 @@
        <item row="0" column="1">
         <widget class="QLineEdit" name="txlKontonummer"/>
        </item>
-       <item row="1" column="0">
+       <item row="2" column="0">
         <widget class="QLabel" name="label_14">
          <property name="text">
           <string>BLZ</string>
          </property>
         </widget>
        </item>
-       <item row="1" column="1">
+       <item row="2" column="1">
         <widget class="QLineEdit" name="txlBlz"/>
        </item>
-       <item row="2" column="0">
+       <item row="4" column="0">
         <widget class="QLabel" name="label_16">
          <property name="text">
           <string>Institut</string>
          </property>
         </widget>
        </item>
-       <item row="2" column="1">
+       <item row="4" column="1">
         <widget class="QLineEdit" name="txlInstitut">
          <property name="readOnly">
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="3" column="0">
+       <item row="5" column="0">
         <widget class="QLabel" name="label_18">
          <property name="text">
           <string>Kontoinhaber</string>
          </property>
         </widget>
        </item>
-       <item row="3" column="1">
+       <item row="5" column="1">
         <widget class="QLineEdit" name="txlKontoInhaber"/>
        </item>
-       <item row="4" column="0">
+       <item row="6" column="0">
         <widget class="QLabel" name="label_19">
          <property name="text">
-          <string>Datum der Einzugsermächtigung</string>
+          <string>Datum Einzugserm.</string>
          </property>
         </widget>
        </item>
-       <item row="4" column="1">
+       <item row="6" column="1">
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
           <widget class="QDateEdit" name="dateEinzugsermaechtigung">
@@ -511,6 +514,26 @@
          </item>
         </layout>
        </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="label_6">
+         <property name="text">
+          <string>IBAN</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="label_20">
+         <property name="text">
+          <string>BIC</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QLineEdit" name="txlIban"/>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="txlBic"/>
+       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="pgZahlungen">
@@ -518,8 +541,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>471</width>
-        <height>530</height>
+        <width>98</width>
+        <height>96</height>
        </rect>
       </property>
       <attribute name="label">
@@ -543,8 +566,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>471</width>
-        <height>530</height>
+        <width>98</width>
+        <height>96</height>
        </rect>
       </property>
       <attribute name="label">
