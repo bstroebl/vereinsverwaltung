@@ -1074,7 +1074,7 @@ class Main(QtGui.QMainWindow):
         thisMitglied = datamodel.Mitglied.get_by(mitgliedsnummer = thisMitgliedsnummer)
 
         newSchreiben.mitglieder = [thisMitglied]
-        thisText = u"Liebes Mitglied, \n\nder Verein hat folgende Daten von Ihnen erfasst:"
+        thisText = u"Liebes Mitglied, \n\nder Kaleidoskop e.V. hat folgende Daten von Ihnen erfasst:"
         thisText = thisText + u"\n\n1) Stammdaten"
         thisText = thisText + u"\nMitgliedsnummer: " + str(thisMitgliedsnummer) + "\n"
         natMitglied = self.isNaturalMember(thisMitgliedsnummer)
@@ -1143,18 +1143,25 @@ class Main(QtGui.QMainWindow):
         thisText = thisText + u"\nZahlweise: " + thisMitglied.zahlweise.zahlweise
         thisText = thisText + u"\nZahlungsart: " + thisMitglied.zahlungsart.zahlungsart
 
-        bank = thisMitglied.bank
 
-        if bank:
+        if thisMitglied.zahlungsart.zahlungsart == u"Bankeinzug":
             thisText = thisText + u"\nBankverbindung:"
-            thisText = thisText + u"\nKontonummer: " + str(thisMitglied.kontonummer)
-            thisText = thisText + "\n" + bank.bank + " (BLZ: " + str(bank.blz) + ")"
+            thisText = thisText + u"\nIBAN: " + str(thisMitglied.iban)
+            thisText = thisText + "\nBIC: " + str(thisMitglied.bic)
             thisText = thisText + u"\nKontoinhaber: " + thisMitglied.kontoinhaber
             thisText = thisText + u"\nEinzugsermächtigung vom: " + str(thisMitglied.einzugsermaechtigungsdatum)
 
         thisText = thisText + u"\n\nBitte überprüfen Sie Ihre Daten und " + \
-            u"teilen Sie eventuelle Unrichtigkeiten baldmöglichst mit.\n\n" + \
-            u"Die Daten werden nur für vereinsinterne Zwecke gespeichert und nicht an Dritte weitergegeben."
+            u"teilen Sie eventuelle Unrichtigkeiten baldmöglichst mit.\n\n"
+        
+        if thisMitglied.mitgliedsgruppe.mitgliedsgruppe == u"Fördermitglied":
+            thisText += u"Sie haben auf Ihrem Aufnahmeantrag \"Fördermitglied\" angekreuzt. " + \
+                u"Ein Fördermitglied ist an der Mitgliederversammlung nicht stimmberechtigt. " + \
+                u"Sie können die Fördermitgliedschaft jederzeit in eine \"normale\" Mitgliedschaft ändern.\n\n"
+                
+        thisText +=  u"Die Daten werden nur für vereinsinterne Zwecke gespeichert und nicht an Dritte weitergegeben.\n\n" + \
+            u"mit besten Grüßen\n\n" + \
+            u"Bernhard Ströbl"
 
         newSchreiben.text = thisText
 
