@@ -726,7 +726,7 @@ class MemberData(QtGui.QWidget):
                            (not self.ui.cbxZahlweise.currentText().isEmpty())
 
                     if retValue and self.ui.cbxZahlungsart.currentText() == 'Bankeinzug':
-                        retValue = (not self.ui.txlKontonummer.text().isEmpty()) and \
+                        retValue =  \
                                (not self.ui.txlBic.text().isEmpty()) and \
                                (not self.ui.txlIban.text().isEmpty()) and \
                                (not self.ui.txlKontoInhaber.text().isEmpty()) and \
