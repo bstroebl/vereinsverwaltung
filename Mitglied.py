@@ -1009,6 +1009,55 @@ class Main(QtGui.QMainWindow):
         return thisText
         
     @QtCore.pyqtSlot()
+    def on_actSEPA_Umstellung_triggered(self):
+        selModel = self.ui.tblMitglieder.selectionModel()
+
+        if len(selModel.selectedRows()) == 0: # keine Auswahl, also alle
+            QtGui.QMessageBox.warning(None,u"keine Auswahl", 
+                u"Bitte alle Mitglieder auswählen, für die ein Brief zur SEPA-Umstellung gedruckt werden soll!")
+        else:
+            
+            for idx in selModel.selectedRows():                    
+                thisMitgliedsnummer = self.memberModel.data(idx).toInt()[0]
+                thisMitglied = datamodel.Mitglied.get_by(mitgliedsnummer = thisMitgliedsnummer)
+                newSchreiben = self.initSchreiben(u"SEPA-Umstellung",  theseMitglieder = [thisMitglied])
+                
+                if newSchreiben:
+                    vorlage = '/home/benno/verein/mitglied/vorlagen/umstellung_sepa.html'
+                    try:
+                        fh = QtCore.QFile(vorlage)
+                        if not fh.open(QtCore.QIODevice.ReadOnly):
+                            raise IOError(str(fh.errorString()))
+                        
+                        stream = QtCore.QTextStream(fh)
+                        stream.setCodec("UTF-8")
+                        inhalt = stream.readAll()
+                    #except IOError as e: # Python3
+                    except IOError, e: # Python2
+                        QtGui.QMessageBox.warning(self, "Load Error",
+                        "Failed to load %s: %s" % (vorlage, e))
+                    
+                    fh.close()
+                    strMitgliedsnummer = str(thisMitgliedsnummer)
+                    while len(strMitgliedsnummer) < 5:
+                        strMitgliedsnummer = "0" + strMitgliedsnummer
+                        
+                    inhalt.replace(QtCore.QString("$mandatsreferenz"),  QtCore.QString("Kaleidoskop" + strMitgliedsnummer))
+                    
+                    thisAnrede = thisMitglied.anrede.anrede
+                    anrede = "Liebe"
+                    
+                    if thisAnrede == "Herr":
+                        anrede += "r"
+                        
+                    anrede += " " + thisMitglied.vorname + " " + thisMitglied.mitgliedsname
+                    inhalt.replace(QtCore.QString("$anrede"),  QtCore.QString(anrede))
+                    inhalt.replace(QtCore.QString("$iban"),  QtCore.QString(thisMitglied.iban))
+                    inhalt.replace(QtCore.QString("$bic"),  QtCore.QString(thisMitglied.bic))
+                    newSchreiben.text = unicode(inhalt)
+                    self.makeSchreiben(newSchreiben, True,  None,  True)
+        
+    @QtCore.pyqtSlot()
     def on_actSpendenbescheinigung_triggered(self):
         selModel = self.ui.tblMitglieder.selectionModel()
 

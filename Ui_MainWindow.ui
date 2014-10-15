@@ -45,7 +45,7 @@
      <x>0</x>
      <y>0</y>
      <width>647</width>
-     <height>22</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="mnuDatei">
@@ -145,6 +145,7 @@
      <addaction name="actSpendenbescheinigung"/>
      <addaction name="actMahnung"/>
      <addaction name="actDatenblatt"/>
+     <addaction name="actSEPA_Umstellung"/>
     </widget>
     <addaction name="actSchreibenVerfassen"/>
     <addaction name="menuSpezial"/>
@@ -484,6 +485,11 @@
   <action name="actDatenblatt">
    <property name="text">
     <string>Datenblatt</string>
+   </property>
+  </action>
+  <action name="actSEPA_Umstellung">
+   <property name="text">
+    <string>SEPA-Umstellung</string>
    </property>
   </action>
  </widget>
