@@ -942,6 +942,10 @@ class Main(QtGui.QMainWindow):
             
         else:
             thisMitgliedsname = mitglied.mitgliedsname
+            thisAnsprechpartner = mitglied.ansprechpartner 
+            
+            if thisAnsprechpartner != "":
+                thisMitgliedsname += "<br>" + thisAnsprechpartner
         
         thisText.replace(QtCore.QString("$mitgliedsname"),  QtCore.QString(thisMitgliedsname))
         
