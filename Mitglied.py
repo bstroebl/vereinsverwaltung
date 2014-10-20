@@ -1226,7 +1226,7 @@ class Main(QtGui.QMainWindow):
             if thisMitglied.namenszusatz:
                 thisText = thisText + u", " + thisMitglied.namenszusatz
             
-            thisText = thisText + u"\nGeburtsdatum: " + str(thisMitglied.geburtsdatum)
+            thisText = thisText + u"\nGeburtsdatum: " + str(QtCore.QDate(thisMitglied.geburtsdatum).toString("dd.MM.yyyy"))
             
             if thisMitglied.beruf:
                 thisText = thisText + u"\nBeruf: " + thisMitglied.beruf
@@ -1263,7 +1263,7 @@ class Main(QtGui.QMainWindow):
 
         thisText = thisText + u"\n\n4) Mitgliedschaft"
         thisText = thisText + u"\nMitgliedsgruppe: " + thisMitglied.mitgliedsgruppe.mitgliedsgruppe
-        thisText = thisText + u"\neingetreten am: " + str(thisMitglied.eintrittsdatum)
+        thisText = thisText + u"\neingetreten am: " + str(QtCore.QDate(thisMitglied.eintrittsdatum).toString("dd.MM.yyyy"))
 
         thisText = thisText + u"\n\n5) Beitragszahlung"
         beitrag = thisMitglied.individueller_beitrag
@@ -1281,7 +1281,7 @@ class Main(QtGui.QMainWindow):
             thisText = thisText + u"\nIBAN: " + str(thisMitglied.iban)
             thisText = thisText + "\nBIC: " + str(thisMitglied.bic)
             thisText = thisText + u"\nKontoinhaber: " + thisMitglied.kontoinhaber
-            thisText = thisText + u"\nEinzugsermächtigung vom: " + str(thisMitglied.einzugsermaechtigungsdatum)
+            thisText = thisText + u"\nEinzugsermächtigung vom: " + str(QtCore.QDate(thisMitglied.einzugsermaechtigungsdatum).toString("dd.MM.yyyy"))
 
         thisText = thisText + u"\n\nBitte überprüfen Sie Ihre Daten und " + \
             u"teilen Sie eventuelle Unrichtigkeiten baldmöglichst mit.\n\n"
