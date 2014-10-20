@@ -1013,6 +1013,79 @@ class Main(QtGui.QMainWindow):
         return thisText
         
     @QtCore.pyqtSlot()
+    def on_actLastschrift_triggered(self):
+        selModel = self.ui.tblMitglieder.selectionModel()
+
+        if len(selModel.selectedRows()) == 0: # keine Auswahl, also alle
+            QtGui.QMessageBox.warning(None,u"keine Auswahl", 
+                u"Bitte alle Mitglieder auswählen, für die ein Brief zur Ankündigung einer Lastschrift gedruckt werden soll!")
+        else:
+            
+            for idx in selModel.selectedRows():                    
+                thisMitgliedsnummer = self.memberModel.data(idx).toInt()[0]
+                thisMitglied = datamodel.Mitglied.get_by(mitgliedsnummer = thisMitgliedsnummer)
+                
+                if thisMitglied.zahlungsart.zahlungsart != "Bankeinzug":
+                    QtGui.QMessageBox.warning(None,u"kein Bankeinzug", 
+                    u"Dieses Mitglied nimmt nicht am Bankeinzug teil!")
+                    return None
+                    
+                newSchreiben = self.initSchreiben(u"Ankündigung einer Lastschrift",  theseMitglieder = [thisMitglied])
+                
+                if newSchreiben:
+                    vorlage = '/home/benno/verein/mitglied/vorlagen/ankuendigung_sepa.html'
+                    try:
+                        fh = QtCore.QFile(vorlage)
+                        if not fh.open(QtCore.QIODevice.ReadOnly):
+                            raise IOError(str(fh.errorString()))
+                        
+                        stream = QtCore.QTextStream(fh)
+                        stream.setCodec("UTF-8")
+                        inhalt = stream.readAll()
+                    #except IOError as e: # Python3
+                    except IOError, e: # Python2
+                        QtGui.QMessageBox.warning(self, "Load Error",
+                        "Failed to load %s: %s" % (vorlage, e))
+                    
+                    fh.close()
+                    strMitgliedsnummer = str(thisMitgliedsnummer)
+                    while len(strMitgliedsnummer) < 5:
+                        strMitgliedsnummer = "0" + strMitgliedsnummer
+                        
+                    inhalt.replace(QtCore.QString("$mandatsreferenz"),  QtCore.QString(strMitgliedsnummer))
+                    
+                    thisAnrede = thisMitglied.anrede.anrede
+                    anrede = "Liebe"
+                    
+                    if thisAnrede == "Herr":
+                        anrede += "r"
+                        
+                    anrede += " " + thisMitglied.vorname + " " + thisMitglied.mitgliedsname
+                    inhalt.replace(QtCore.QString("$anrede"),  QtCore.QString(anrede))
+                    
+                    heute = QtCore.QDate.currentDate()
+                    forYear = heute.year()
+                    inhalt.replace(QtCore.QString("$jahr"),  QtCore.QString(str(forYear)))
+                    
+                    targetDate = heute.addDays(14)
+                    inhalt.replace(QtCore.QString("$datum"),  targetDate.toString("dd.MM.yyyy"))
+                    
+                    beitrag = thisMitglied.individueller_beitrag
+                    
+                    if beitrag == None:
+                        beitrag = thisMitglied.beitragsgruppe.beitrag_nach_satzung
+                        
+                    if QtCore.QDate(thisMitglied.eintrittsdatum) >= QtCore.QDate.fromString("01.07." + str(forYear),  "dd.MM.yyyy"):
+                        beitrag = beitrag / 2
+                    
+                    inhalt.replace(QtCore.QString("$betrag"),  QtCore.QString(str(beitrag)))
+                    inhalt.replace(QtCore.QString("$iban"),  QtCore.QString(thisMitglied.iban))
+                    inhalt.replace(QtCore.QString("$bic"),  QtCore.QString(thisMitglied.bic))
+                    inhalt.replace(QtCore.QString("$bank"),  QtCore.QString(thisMitglied.bic))
+                    newSchreiben.text = unicode(inhalt)
+                    self.makeSchreiben(newSchreiben)
+    
+    @QtCore.pyqtSlot()
     def on_actSEPA_Umstellung_triggered(self):
         selModel = self.ui.tblMitglieder.selectionModel()
 

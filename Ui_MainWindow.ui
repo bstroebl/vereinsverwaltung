@@ -143,8 +143,9 @@
       <string>Spezial</string>
      </property>
      <addaction name="actSpendenbescheinigung"/>
-     <addaction name="actMahnung"/>
+     <addaction name="actLastschrift"/>
      <addaction name="actDatenblatt"/>
+     <addaction name="actMahnung"/>
      <addaction name="actSEPA_Umstellung"/>
     </widget>
     <addaction name="actSchreibenVerfassen"/>
@@ -490,6 +491,11 @@
   <action name="actSEPA_Umstellung">
    <property name="text">
     <string>SEPA-Umstellung</string>
+   </property>
+  </action>
+  <action name="actLastschrift">
+   <property name="text">
+    <string>Ankündigung Lastschrift</string>
    </property>
   </action>
  </widget>
