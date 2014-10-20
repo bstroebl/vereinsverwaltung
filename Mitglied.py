@@ -1024,6 +1024,12 @@ class Main(QtGui.QMainWindow):
             for idx in selModel.selectedRows():                    
                 thisMitgliedsnummer = self.memberModel.data(idx).toInt()[0]
                 thisMitglied = datamodel.Mitglied.get_by(mitgliedsnummer = thisMitgliedsnummer)
+                
+                if thisMitglied.zahlungsart.zahlungsart != "Bankeinzug":
+                    QtGui.QMessageBox.warning(None,u"kein Bankeinzug", 
+                    u"Dieses Mitglied nimmt nicht am Bankeinzug teil!")
+                    return None
+                    
                 newSchreiben = self.initSchreiben(u"SEPA-Umstellung",  theseMitglieder = [thisMitglied])
                 
                 if newSchreiben:
@@ -1046,7 +1052,7 @@ class Main(QtGui.QMainWindow):
                     while len(strMitgliedsnummer) < 5:
                         strMitgliedsnummer = "0" + strMitgliedsnummer
                         
-                    inhalt.replace(QtCore.QString("$mandatsreferenz"),  QtCore.QString("Kaleidoskop" + strMitgliedsnummer))
+                    inhalt.replace(QtCore.QString("$mandatsreferenz"),  QtCore.QString(strMitgliedsnummer))
                     
                     thisAnrede = thisMitglied.anrede.anrede
                     anrede = "Liebe"
@@ -1059,7 +1065,7 @@ class Main(QtGui.QMainWindow):
                     inhalt.replace(QtCore.QString("$iban"),  QtCore.QString(thisMitglied.iban))
                     inhalt.replace(QtCore.QString("$bic"),  QtCore.QString(thisMitglied.bic))
                     newSchreiben.text = unicode(inhalt)
-                    self.makeSchreiben(newSchreiben, True,  None,  True)
+                    self.makeSchreiben(newSchreiben)
         
     @QtCore.pyqtSlot()
     def on_actSpendenbescheinigung_triggered(self):
