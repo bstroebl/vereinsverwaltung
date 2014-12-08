@@ -1020,7 +1020,7 @@ class MemberData(QtGui.QWidget):
                 austrittsdatum = None
                 austrittsgrund = None
             else:
-                austrittsdatum = qDateToDate(austrittsdatum)
+                austrittsdatum = self.qDateToDate(austrittsdatum)
                 thisAustrittsgrund = unicode(self.ui.cbxAustrittsgrund.currentText())
                 austrittsgrund = datamodel.Austrittsgrund.get_by(austrittsgrund = thisAustrittsgrund)
 
