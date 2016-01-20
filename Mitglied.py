@@ -211,48 +211,29 @@ class Main(QtGui.QMainWindow):
 
     def connectDb(self):
         '''Verbindung mit DB aufbauen'''
+        self.dbfile = "verein.db"
+        db = QtSql.QSqlDatabase.addDatabase("QSQLITE")
+        db.setDatabaseName(self.dbfile)
+        
+        #mySettings = self.getDBSettings()
 
-        mySettings = self.getDBSettings()
+        #if mySettings:
+                
+        ok = db.open()
 
-        if mySettings:
-            if self.dbPassword.isEmpty():
-                msg = QtCore.QString(u"Passwort für User ")
-                msg.append(self.user + "@")
-                msg.append(self.host + ":")
-                msg.append(str(self.port) + "/")
-                msg.append(self.database)
-                self.dbPassword, ok = QtGui.QInputDialog.getText(None, "Passwort",
-                     msg, QtGui.QLineEdit.Password)
-
-            else:
-                ok = True
-
-            if ok:
-                db = QtSql.QSqlDatabase.addDatabase(self.qtype)
-                db.setHostName(self.host)
-                db.setPort(self.port)
-                db.setDatabaseName(self.database)
-                db.setUserName(self.user)
-                db.setPassword(self.dbPassword)
-                ok = db.open()
-
-                if ok:
-                    self.db = db
-                    #elixir.metadata.bind = 'postgresql://verein:verein@127.0.0.1/elixir'
-                    elixir.metadata.bind = str(self.type) + '://' + str(self.user) + \
-                                            ':' + str(self.dbPassword) + \
-                                            '@' + str(self.host) + ':' + str(self.port) + \
-                                            '/' + str(self.database)
-                    elixir.metadata.bind.echo = True
-                    elixir.setup_all(True) # Verbindung aufbauen und Tabellen anlegen
-                    # bleibt so, damit bei einer DB-Neuanlage aber gespeicherter
-                    # Verbindung die Tabellen angelegt werden, ist unschädlich, wenn
-                    # es die Tabellen schon gibt
-                else:
-                    self.noDbConnection()
-                    self.db = None
+        if ok:
+            self.db = db
+            elixir.metadata.bind = "sqlite:///" + self.dbfile
+            elixir.metadata.bind.echo = True
+            elixir.setup_all(True) # Verbindung aufbauen und Tabellen anlegen
+            # bleibt so, damit bei einer DB-Neuanlage aber gespeicherter
+            # Verbindung die Tabellen angelegt werden, ist unschädlich, wenn
+            # es die Tabellen schon gibt
         else:
-            self.on_actVerbindung_triggered()
+            self.noDbConnection()
+            self.db = None
+        #else:
+            #self.on_actVerbindung_triggered()
 
     def memberTableSql(self):
         '''gibt die SQL zurück, mit der die Mitgliedertabelle gefüllt wird'''
@@ -747,26 +728,26 @@ class Main(QtGui.QMainWindow):
         # einige Werte anlegen, falls die DB leer ist
 
         if len(datamodel.Anrede.query.all()) == 0:
-            datamodel.Anrede(anrede = 'Herr')
-            datamodel.Anrede(anrede = 'Frau')
+            datamodel.Anrede(anrede = u'Herr')
+            datamodel.Anrede(anrede = u'Frau')
 
         if len(datamodel.Austrittsgrund.query.all()) == 0:
-            datamodel.Austrittsgrund(austrittsgrund = 'Kündigung')
-            datamodel.Austrittsgrund(austrittsgrund = 'Ausschluss')
+            datamodel.Austrittsgrund(austrittsgrund = u'Kündigung')
+            datamodel.Austrittsgrund(austrittsgrund = u'Ausschluss')
 
         if len(datamodel.HinweisEmail.query.all()) == 0:
-            datamodel.HinweisEmail(hinweis = 'privat')
-            datamodel.HinweisEmail(hinweis = 'dienstlich')
+            datamodel.HinweisEmail(hinweis = u'privat')
+            datamodel.HinweisEmail(hinweis = u'dienstlich')
 
         if len(datamodel.HinweisTelefonFax.query.all()) == 0:
-            datamodel.HinweisTelefonFax(hinweis = 'Tel. privat')
-            datamodel.HinweisTelefonFax(hinweis = 'Tel. dienstlich')
-            datamodel.HinweisTelefonFax(hinweis = 'mobil')
-            datamodel.HinweisTelefonFax(hinweis = 'Fax dienstlich')
-            datamodel.HinweisTelefonFax(hinweis = 'Fax privat')
+            datamodel.HinweisTelefonFax(hinweis = u'Tel. privat')
+            datamodel.HinweisTelefonFax(hinweis = u'Tel. dienstlich')
+            datamodel.HinweisTelefonFax(hinweis = u'mobil')
+            datamodel.HinweisTelefonFax(hinweis = u'Fax dienstlich')
+            datamodel.HinweisTelefonFax(hinweis = u'Fax privat')
 
         if len(datamodel.Land.query.all()) == 0:
-            datamodel.Land(land = 'Deutschland', kuerzel = "D")
+            datamodel.Land(land = u'Deutschland', kuerzel = "D")
 
         if len(datamodel.Zahlungsart.query.all()) == 0:
             datamodel.Zahlungsart(zahlungsart = u'Überweisung')
@@ -776,8 +757,8 @@ class Main(QtGui.QMainWindow):
             datamodel.Zahlweise(zahlweise = u'jährlich')
 
         if len(datamodel.Schreibenart.query.all()) == 0:
-            datamodel.Schreibenart(schreibenart = 'Email')
-            datamodel.Schreibenart(schreibenart = 'Brief')
+            datamodel.Schreibenart(schreibenart = u'Email')
+            datamodel.Schreibenart(schreibenart = u'Brief')
             #datamodel.Schreibenart(schreibenart = 'Fax')
 
         if len(datamodel.Mitgliedsgruppe.query.all()) == 0:
@@ -822,12 +803,12 @@ class Main(QtGui.QMainWindow):
                 suchkriterium = u'ohne Emailadresse')
             newSuchkriterium.abfrage = \
                 'id NOT IN (SELECT mitglied_id ' + \
-                    'FROM emailadresse)'
+                    u'FROM emailadresse)'
             newSuchkriterium = datamodel.Suchkriterium( \
                 suchkriterium = u'Überweiser')
             newSuchkriterium.abfrage = \
                 u'zahlungsart_id = (SELECT id FROM zahlungsart ' + \
-                    'WHERE zalungsart = \'Überweisung\''
+                    u'WHERE zalungsart = \'Überweisung\''
 
         elixir.session.commit() #speichern
         self.prepareCbxValues()

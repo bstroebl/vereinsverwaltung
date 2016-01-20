@@ -119,12 +119,7 @@ class MemberData(QtGui.QWidget):
         self.closeBtn = bb.button(QtGui.QDialogButtonBox.Close)
 
         #elixir-Session
-        elixir.metadata.bind = str(self.application.type) + \
-                                    '://' + str(self.application.user) + \
-                                    ':' + str(self.application.dbPassword) + \
-                                    '@' + str(self.application.host) + \
-                                    ':' + str(self.application.port) + \
-                                    '/' + str(self.application.database)
+        elixir.metadata.bind = "sqlite:///" + self.application.dbfile
         elixir.metadata.bind.echo = True
         elixir.setup_all()
 
