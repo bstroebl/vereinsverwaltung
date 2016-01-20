@@ -2,5 +2,6 @@
 Ui*.py
 .eric4project/
 .eric5project/
+.eric6project/
 .ropeproject/
 mitglied.e4p
