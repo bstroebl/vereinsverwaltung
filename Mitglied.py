@@ -56,8 +56,12 @@ class Main(QtGui.QMainWindow):
 
         #Datenbank
         self.db = None
+        self.dbfile = None
         self.connectDb()
         self.initDataFromDB()
+
+    def __debug(self, msg):
+        QtGui.QMessageBox.information(self, "Debug", msg)
 
     def initDataFromDB(self):
         if self.db:
@@ -155,13 +159,7 @@ class Main(QtGui.QMainWindow):
         settings.beginGroup(u"DB_Connection")
 
         if len(settings.childKeys()) > 0:
-            self.type = settings.value("type").toString().toLower()
-            self.qtype = settings.value("qtype").toString()
-            self.host = settings.value("host").toString()
-            self.database = settings.value("database").toString()
-            self.port = settings.value("port").toInt()[0]
-            self.user = settings.value("user").toString()
-            self.dbPassword = settings.value("password").toString()
+            self.dbfile = str(settings.value("dbfile").toString())
             settings.endGroup()
             return True
         else:
@@ -182,6 +180,13 @@ class Main(QtGui.QMainWindow):
         settings.endGroup()
 
         return [host, port, user, password, sender, ssl, sendername]
+
+    def setDBSettings(self):
+        if self.dbfile != None:
+            settings = QtCore.QSettings() #u"Verein", u"Mitgliederverwaltung")
+            settings.beginGroup(u"DB_Connection")
+            settings.setValue("dbfile", self.dbfile)
+            settings.endGroup()
 
     def setSMTPSettings(self):
         dlg = SMTPDialog(self.getSMTPSettings())
@@ -211,29 +216,29 @@ class Main(QtGui.QMainWindow):
 
     def connectDb(self):
         '''Verbindung mit DB aufbauen'''
-        self.dbfile = "verein.db"
-        db = QtSql.QSqlDatabase.addDatabase("QSQLITE")
-        db.setDatabaseName(self.dbfile)
-        
-        #mySettings = self.getDBSettings()
+        if self.dbfile == None:
+            mySettings = self.getDBSettings()
+            self.__debug(str(self.dbfile))
 
-        #if mySettings:
-                
-        ok = db.open()
+            if not mySettings:
+                self.on_actVerbindung_triggered()
 
-        if ok:
-            self.db = db
-            elixir.metadata.bind = "sqlite:///" + self.dbfile
-            elixir.metadata.bind.echo = True
-            elixir.setup_all(True) # Verbindung aufbauen und Tabellen anlegen
-            # bleibt so, damit bei einer DB-Neuanlage aber gespeicherter
-            # Verbindung die Tabellen angelegt werden, ist unschädlich, wenn
-            # es die Tabellen schon gibt
-        else:
-            self.noDbConnection()
-            self.db = None
-        #else:
-            #self.on_actVerbindung_triggered()
+        if self.dbfile != None: #"verein.db"
+            db = QtSql.QSqlDatabase.addDatabase("QSQLITE")
+            db.setDatabaseName(self.dbfile)
+            ok = db.open()
+
+            if ok:
+                self.db = db
+                elixir.metadata.bind = "sqlite:///" + self.dbfile
+                elixir.metadata.bind.echo = True
+                elixir.setup_all(True) # Verbindung aufbauen und Tabellen anlegen
+                # bleibt so, damit bei einer DB-Neuanlage aber gespeicherter
+                # Verbindung die Tabellen angelegt werden, ist unschädlich, wenn
+                # es die Tabellen schon gibt
+            else:
+                self.noDbConnection()
+                self.db = None
 
     def memberTableSql(self):
         '''gibt die SQL zurück, mit der die Mitgliedertabelle gefüllt wird'''
@@ -432,12 +437,12 @@ class Main(QtGui.QMainWindow):
         outer = MIMEMultipart.MIMEMultipart()
         outer['Subject'] = thisSchreiben.titel
         outer['From'] = sender
-        
+
         if len(valideEmailAdressen) == 1:
             outer['To'] = ', '.join(valideEmailAdressen)
         else:
             outer['To'] = sender #Eine To-Adresse für BCC
-            
+
         mailMsg = MIMEText.MIMEText(thisSchreiben.text.encode('utf-8'), _charset='utf-8')
         outer.attach(mailMsg)
 
@@ -484,7 +489,7 @@ class Main(QtGui.QMainWindow):
 
         try:
             #zweites Argument von sendmail ist die Liste der Adressaten, dies ist völlig unabhängig vom To in der MIME-message
-            adressErrors = smtp.sendmail(sender, valideEmailAdressen, composed) 
+            adressErrors = smtp.sendmail(sender, valideEmailAdressen, composed)
         except smtplib.SMTPRecipientsRefused as e:
             addressErrors = e.recipients
         except smtplib.SMTPSenderRefused:
@@ -537,7 +542,7 @@ class Main(QtGui.QMainWindow):
 
             if newSchreiben.art.schreibenart == "Email":
                 sent = self.sendEmail(newSchreiben)
-                
+
                 if sent:
                     QtGui.QMessageBox.information(None, "",  u"Email gesendet!")
             else:
@@ -819,10 +824,16 @@ class Main(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def on_actVerbindung_triggered(self):
-        dlg = VerbindungsDialog()
-        result = dlg.exec_()
+        dbfile = QtGui.QFileDialog.getOpenFileName(self, u"Datendatei öffnen",
+            filter = "Datendatei (*.db)")
 
-        if result == 1:
+        if dbfile == "":
+            dbfile = QtGui.QFileDialog.getSaveFileName(self, u"Datendatei anlegen",
+                filter = "Datendatei (*.db)")
+
+        if dbfile != "":
+            self.dbfile = str(dbfile)
+            self.setDBSettings()
             #alle offenen Tabs schliessen
             self.closeAllTabs()
             elixir.session.close()
@@ -857,16 +868,16 @@ class Main(QtGui.QMainWindow):
         newTitle = QtCore.QString("Neues Mitglied " + str(self.newMemberId * (-1)))
         idx = self.ui.tabMitglied.addTab(newTab, icon, newTitle)
         self.ui.tabMitglied.setCurrentIndex(idx)
-    
+
     def initSchreiben(self,  titel = u"aussagefähiger Titel",  art = "Email",  theseMitglieder = None):
         newSchreiben = datamodel.Schreiben()
         newSchreiben.titel = titel
         newSchreiben.erzeugt = datetime.now()
         schreibenArt = datamodel.Schreibenart.get_by(schreibenart = art)
-        
+
         if schreibenArt:
             newSchreiben.art = schreibenArt
-            
+
         if not theseMitglieder:
             # Mitglieder hinzufügen
             selModel = self.ui.tblMitglieder.selectionModel()
@@ -887,9 +898,9 @@ class Main(QtGui.QMainWindow):
             QtGui.QMessageBox.warning(None,u"keine Auswahl", u"Es wurden keine Adressaten ausgewählt!")
             elixir.session.rollback()
             return None
-        
+
         return newSchreiben
-    
+
     # arg thisText is QString("$mitgliedsname")
     def replacePlaceholders(self,  thisText,  thisMitgliedsnummer):
         isNaturalMember = True
@@ -911,41 +922,41 @@ class Main(QtGui.QMainWindow):
         if isNaturalMember:
             thisTitel = mitglied.titel
             thisNamenszusatz = mitglied.namenszusatz
-            
+
             if not thisTitel:
                 thisTitel = ""
-            
+
             if not thisNamenszusatz:
                 thisNamenszusatz = ""
-                
+
             thisMitgliedsname = thisTitel + " " + mitglied.vorname + \
                 " " + thisNamenszusatz + " " + mitglied.mitgliedsname
-            
+
         else:
             thisMitgliedsname = mitglied.mitgliedsname
-            thisAnsprechpartner = mitglied.ansprechpartner 
-            
+            thisAnsprechpartner = mitglied.ansprechpartner
+
             if thisAnsprechpartner != "":
                 thisMitgliedsname += "<br>" + thisAnsprechpartner
-        
+
         thisText.replace(QtCore.QString("$mitgliedsname"),  QtCore.QString(thisMitgliedsname))
-        
+
         thisHnrZusatz = mitglied.hnrzusatz
-        
+
         if not thisHnrZusatz:
             thisHnrZusatz = ""
-            
+
         thisAdressZusatz = mitglied.adresszusatz
-        thisAdresse = mitglied.strasse + " " + str(mitglied.hnr) + thisHnrZusatz  + "<br>" 
-        
+        thisAdresse = mitglied.strasse + " " + str(mitglied.hnr) + thisHnrZusatz  + "<br>"
+
         if thisAdressZusatz:
             thisAdresse = thisAdresse + thisAdressZusatz + "<br>"
-            
+
         thisAdresse = thisAdresse + str(mitglied.ort.plz) + " " + mitglied.ort.ort
         thisText.replace(QtCore.QString("$adresse"),  QtCore.QString(thisAdresse))
         thisText.replace(QtCore.QString("$datum"),  QtCore.QDate.currentDate().toString("dd.MM.yyyy"))
         return thisText
-    
+
     def replaceZahlungen(self,  thisText,  thisMitgliedsnummer,  thisYear):
         mitglieder = datamodel.MitgliedNatuerlich.query.filter_by(\
                                 mitgliedsnummer=thisMitgliedsnummer).all()
@@ -959,67 +970,67 @@ class Main(QtGui.QMainWindow):
             return None
         else:
             mitglied = mitglieder[0]
-        
+
         summe = None
-        
+
         for zahlung in mitglied.zahlungen:
             if QtCore.QDate(zahlung.zahldatum).year() == thisYear:
                 sList = QtCore.QString(str(zahlung.betrag)).split(".")
                 thisSummeB = numberToWord.num2word(sList[0].toInt()[0])
-                
+
                 if len(sList) == 2 and sList[1].toInt()[0] > 0:
                     thisSummeB = thisSummeB + " Komma " + numberToWord.num2word(sList[1].toInt()[0])
-                
+
                 loc=QtCore.QLocale.system()
-                
+
                 if summe == None:
                     summe = loc.toString(zahlung.betrag)
                     summeB = thisSummeB
                     zahldatum = QtCore.QDate(zahlung.zahldatum).toString("dd.MM.yyyy")
                 else:
                     summe += "</FONT></FONT></P>"
-                    summe += "<P CLASS=\"western\"><FONT FACE=\"Liberation Sans, sans-serif\"><FONT SIZE=2>" 
+                    summe += "<P CLASS=\"western\"><FONT FACE=\"Liberation Sans, sans-serif\"><FONT SIZE=2>"
                     summe += loc.toString(zahlung.betrag)
                     summeB += "</FONT></FONT></P>"
-                    summeB += "<P CLASS=\"western\"><FONT FACE=\"Liberation Sans, sans-serif\"><FONT SIZE=2>" 
+                    summeB += "<P CLASS=\"western\"><FONT FACE=\"Liberation Sans, sans-serif\"><FONT SIZE=2>"
                     summeB += thisSummeB
-                    zahldatum += "</FONT></FONT></P>" 
-                    zahldatum += "<P CLASS=\"western\"><FONT FACE=\"Liberation Sans, sans-serif\"><FONT SIZE=2>" 
+                    zahldatum += "</FONT></FONT></P>"
+                    zahldatum += "<P CLASS=\"western\"><FONT FACE=\"Liberation Sans, sans-serif\"><FONT SIZE=2>"
                     zahldatum += QtCore.QDate(zahlung.zahldatum).toString("dd.MM.yyyy")
-        
+
         thisText.replace(QtCore.QString("$summe"),  QtCore.QString(summe))
         thisText.replace(QtCore.QString("$bsumme"),  QtCore.QString(summeB))
         thisText.replace(QtCore.QString("$zahldatum"),  QtCore.QString(zahldatum))
-        
+
         return thisText
-        
+
     @QtCore.pyqtSlot()
     def on_actLastschrift_triggered(self):
         selModel = self.ui.tblMitglieder.selectionModel()
 
         if len(selModel.selectedRows()) == 0: # keine Auswahl, also alle
-            QtGui.QMessageBox.warning(None,u"keine Auswahl", 
+            QtGui.QMessageBox.warning(None,u"keine Auswahl",
                 u"Bitte alle Mitglieder auswählen, für die ein Brief zur Ankündigung einer Lastschrift gedruckt werden soll!")
         else:
-            
-            for idx in selModel.selectedRows():                    
+
+            for idx in selModel.selectedRows():
                 thisMitgliedsnummer = self.memberModel.data(idx).toInt()[0]
                 thisMitglied = datamodel.Mitglied.get_by(mitgliedsnummer = thisMitgliedsnummer)
-                
+
                 if thisMitglied.zahlungsart.zahlungsart != "Bankeinzug":
-                    QtGui.QMessageBox.warning(None,u"kein Bankeinzug", 
+                    QtGui.QMessageBox.warning(None,u"kein Bankeinzug",
                     u"Dieses Mitglied nimmt nicht am Bankeinzug teil!")
                     return None
-                    
+
                 newSchreiben = self.initSchreiben(u"Ankündigung einer Lastschrift",  theseMitglieder = [thisMitglied])
-                
+
                 if newSchreiben:
                     vorlage = '/home/benno/verein/mitglied/vorlagen/ankuendigung_sepa.html'
                     try:
                         fh = QtCore.QFile(vorlage)
                         if not fh.open(QtCore.QIODevice.ReadOnly):
                             raise IOError(str(fh.errorString()))
-                        
+
                         stream = QtCore.QTextStream(fh)
                         stream.setCodec("UTF-8")
                         inhalt = stream.readAll()
@@ -1027,72 +1038,72 @@ class Main(QtGui.QMainWindow):
                     except IOError, e: # Python2
                         QtGui.QMessageBox.warning(self, "Load Error",
                         "Failed to load %s: %s" % (vorlage, e))
-                    
+
                     fh.close()
                     strMitgliedsnummer = str(thisMitgliedsnummer)
                     while len(strMitgliedsnummer) < 5:
                         strMitgliedsnummer = "0" + strMitgliedsnummer
-                        
+
                     inhalt.replace(QtCore.QString("$mandatsreferenz"),  QtCore.QString(strMitgliedsnummer))
-                    
+
                     thisAnrede = thisMitglied.anrede.anrede
                     anrede = "Liebe"
-                    
+
                     if thisAnrede == "Herr":
                         anrede += "r"
-                        
+
                     anrede += " " + thisMitglied.vorname + " " + thisMitglied.mitgliedsname
                     inhalt.replace(QtCore.QString("$anrede"),  QtCore.QString(anrede))
-                    
+
                     heute = QtCore.QDate.currentDate()
                     forYear = heute.year()
                     inhalt.replace(QtCore.QString("$jahr"),  QtCore.QString(str(forYear)))
-                    
+
                     targetDate = heute.addDays(14)
                     inhalt.replace(QtCore.QString("$datum"),  targetDate.toString("dd.MM.yyyy"))
-                    
+
                     beitrag = thisMitglied.individueller_beitrag
-                    
+
                     if beitrag == None:
                         beitrag = thisMitglied.beitragsgruppe.beitrag_nach_satzung
-                        
+
                     if QtCore.QDate(thisMitglied.eintrittsdatum) >= QtCore.QDate.fromString("01.07." + str(forYear),  "dd.MM.yyyy"):
                         beitrag = beitrag / 2
-                    
+
                     inhalt.replace(QtCore.QString("$betrag"),  QtCore.QString(str(beitrag)))
                     inhalt.replace(QtCore.QString("$iban"),  QtCore.QString(thisMitglied.iban))
                     inhalt.replace(QtCore.QString("$bic"),  QtCore.QString(thisMitglied.bic))
                     inhalt.replace(QtCore.QString("$bank"),  QtCore.QString(thisMitglied.bic))
                     newSchreiben.text = unicode(inhalt)
                     self.makeSchreiben(newSchreiben)
-    
+
     @QtCore.pyqtSlot()
     def on_actSEPA_Umstellung_triggered(self):
         selModel = self.ui.tblMitglieder.selectionModel()
 
         if len(selModel.selectedRows()) == 0: # keine Auswahl, also alle
-            QtGui.QMessageBox.warning(None,u"keine Auswahl", 
+            QtGui.QMessageBox.warning(None,u"keine Auswahl",
                 u"Bitte alle Mitglieder auswählen, für die ein Brief zur SEPA-Umstellung gedruckt werden soll!")
         else:
-            
-            for idx in selModel.selectedRows():                    
+
+            for idx in selModel.selectedRows():
                 thisMitgliedsnummer = self.memberModel.data(idx).toInt()[0]
                 thisMitglied = datamodel.Mitglied.get_by(mitgliedsnummer = thisMitgliedsnummer)
-                
+
                 if thisMitglied.zahlungsart.zahlungsart != "Bankeinzug":
-                    QtGui.QMessageBox.warning(None,u"kein Bankeinzug", 
+                    QtGui.QMessageBox.warning(None,u"kein Bankeinzug",
                     u"Dieses Mitglied nimmt nicht am Bankeinzug teil!")
                     return None
-                    
+
                 newSchreiben = self.initSchreiben(u"SEPA-Umstellung",  theseMitglieder = [thisMitglied])
-                
+
                 if newSchreiben:
                     vorlage = '/home/benno/verein/mitglied/vorlagen/umstellung_sepa.html'
                     try:
                         fh = QtCore.QFile(vorlage)
                         if not fh.open(QtCore.QIODevice.ReadOnly):
                             raise IOError(str(fh.errorString()))
-                        
+
                         stream = QtCore.QTextStream(fh)
                         stream.setCodec("UTF-8")
                         inhalt = stream.readAll()
@@ -1100,55 +1111,55 @@ class Main(QtGui.QMainWindow):
                     except IOError, e: # Python2
                         QtGui.QMessageBox.warning(self, "Load Error",
                         "Failed to load %s: %s" % (vorlage, e))
-                    
+
                     fh.close()
                     strMitgliedsnummer = str(thisMitgliedsnummer)
                     while len(strMitgliedsnummer) < 5:
                         strMitgliedsnummer = "0" + strMitgliedsnummer
-                        
+
                     inhalt.replace(QtCore.QString("$mandatsreferenz"),  QtCore.QString(strMitgliedsnummer))
-                    
+
                     thisAnrede = thisMitglied.anrede.anrede
                     anrede = "Liebe"
-                    
+
                     if thisAnrede == "Herr":
                         anrede += "r"
-                        
+
                     anrede += " " + thisMitglied.vorname + " " + thisMitglied.mitgliedsname
                     inhalt.replace(QtCore.QString("$anrede"),  QtCore.QString(anrede))
                     inhalt.replace(QtCore.QString("$iban"),  QtCore.QString(thisMitglied.iban))
                     inhalt.replace(QtCore.QString("$bic"),  QtCore.QString(thisMitglied.bic))
                     newSchreiben.text = unicode(inhalt)
                     self.makeSchreiben(newSchreiben)
-        
+
     @QtCore.pyqtSlot()
     def on_actSpendenbescheinigung_triggered(self):
         selModel = self.ui.tblMitglieder.selectionModel()
 
         if len(selModel.selectedRows()) == 0: # keine Auswahl, also alle
-            QtGui.QMessageBox.warning(None,u"keine Auswahl", 
+            QtGui.QMessageBox.warning(None,u"keine Auswahl",
                 u"Bitte alle Mitglieder auswählen, für die eine Spendenbescheinigung gedruckt werden soll!")
         else:
-            
+
             for idx in selModel.selectedRows():
-                thisYear,  ok = QtGui.QInputDialog.getInt(None, "Spendenbescheinigung",  u"Ausstellungsjahr",  
+                thisYear,  ok = QtGui.QInputDialog.getInt(None, "Spendenbescheinigung",  u"Ausstellungsjahr",
                                                      QtCore.QDate.currentDate().year() - 1)
-                
+
                 if not ok:
                     return None
-                    
+
                 thisMitgliedsnummer = self.memberModel.data(idx).toInt()[0]
                 thisMitglied = datamodel.Mitglied.get_by(mitgliedsnummer = thisMitgliedsnummer)
                 newSchreiben = self.initSchreiben(u"Spendenbescheinigung",  "Brief",  [thisMitglied])
-                
+
                 if newSchreiben:
                     vorlage = '/home/benno/verein/mitglied/vorlagen/spendenbescheinigung.html'
-                    
+
                     try:
                         fh = QtCore.QFile(vorlage)
                         if not fh.open(QtCore.QIODevice.ReadOnly):
                             raise IOError(str(fh.errorString()))
-                        
+
                         stream = QtCore.QTextStream(fh)
                         stream.setCodec("UTF-8")
                         inhalt = stream.readAll()
@@ -1156,17 +1167,17 @@ class Main(QtGui.QMainWindow):
                     except IOError, e: # Python2
                         QtGui.QMessageBox.warning(self, "Load Error",
                         "Failed to load %s: %s" % (vorlage, e))
-                    
+
                     fh.close()
                     inhalt = self.replacePlaceholders(inhalt,  thisMitgliedsnummer)
                     inhalt = self.replaceZahlungen(inhalt,  thisMitgliedsnummer,  thisYear)
                     newSchreiben.text = unicode(inhalt)
                     self.makeSchreiben(newSchreiben, True,  None,  True)
-        
+
     @QtCore.pyqtSlot()
     def on_actSchreibenVerfassen_triggered(self):
         newSchreiben = self.initSchreiben()
-        
+
         if newSchreiben:
             self.makeSchreiben(newSchreiben, True)
 
@@ -1194,21 +1205,21 @@ class Main(QtGui.QMainWindow):
 
         if  natMitglied:
             thisText = thisText + thisMitglied.anrede.anrede
-            
+
             if thisMitglied.titel:
                 thisText = thisText + u" " + thisMitglied.titel
-            
+
             thisText = thisText + u" " + thisMitglied.vorname + " "
 
         thisText = thisText + thisMitglied.mitgliedsname
 
         if natMitglied:
-            
+
             if thisMitglied.namenszusatz:
                 thisText = thisText + u", " + thisMitglied.namenszusatz
-            
+
             thisText = thisText + u"\nGeburtsdatum: " + str(QtCore.QDate(thisMitglied.geburtsdatum).toString("dd.MM.yyyy"))
-            
+
             if thisMitglied.beruf:
                 thisText = thisText + u"\nBeruf: " + thisMitglied.beruf
         else:
@@ -1219,15 +1230,15 @@ class Main(QtGui.QMainWindow):
             thisText = thisText + u"\nSonstiges: " + thisMitglied.hinweise
 
         thisText = thisText + u"\n\n2) Anschrift"
-        
+
         if thisMitglied.adresszusatz:
             thisText = thisText + "\n" + thisMitglied.adresszusatz
-            
-        thisText = thisText + "\n" + thisMitglied.strasse + " " + str(thisMitglied.hnr) 
-       
+
+        thisText = thisText + "\n" + thisMitglied.strasse + " " + str(thisMitglied.hnr)
+
         if thisMitglied.hnrzusatz:
             thisText = thisText + thisMitglied.hnrzusatz
-        
+
         thisText = thisText + "\n" + thisMitglied.ort.land.kuerzel + " - " + thisMitglied.ort.plz + " " + thisMitglied.ort.ort
 
         thisText = thisText + u"\n\n3) Kontaktdaten"
@@ -1236,7 +1247,7 @@ class Main(QtGui.QMainWindow):
         for emailAdresse in thisMitglied.emailadressen:
             noEmail = False
             thisText = thisText + u"\nEmail-Adresse (" + emailAdresse.hinweis.hinweis + "): " + \
-                emailAdresse.emailadresse 
+                emailAdresse.emailadresse
 
         for telefonFax in thisMitglied.telefonfaxnummern:
             thisText = thisText + u"\n" + telefonFax.hinweis.hinweis + \
@@ -1266,12 +1277,12 @@ class Main(QtGui.QMainWindow):
 
         thisText = thisText + u"\n\nBitte überprüfen Sie Ihre Daten und " + \
             u"teilen Sie eventuelle Unrichtigkeiten baldmöglichst mit.\n\n"
-        
+
         if thisMitglied.mitgliedsgruppe.mitgliedsgruppe == u"Fördermitglied":
             thisText += u"Sie haben auf Ihrem Aufnahmeantrag \"Fördermitglied\" angekreuzt. " + \
                 u"Ein Fördermitglied ist an der Mitgliederversammlung nicht stimmberechtigt. " + \
                 u"Sie können die Fördermitgliedschaft jederzeit in eine \"normale\" Mitgliedschaft ändern.\n\n"
-                
+
         thisText +=  u"Die Daten werden nur für vereinsinterne Zwecke gespeichert und nicht an Dritte weitergegeben.\n\n" + \
             u"mit besten Grüßen\n\n" + \
             u"Bernhard Ströbl"
