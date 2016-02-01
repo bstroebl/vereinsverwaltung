@@ -49,6 +49,9 @@ class Main(QtGui.QMainWindow):
         QtCore.QCoreApplication.setOrganizationName("Verein")
         QtCore.QCoreApplication.setApplicationName("Mitgliederverwaltung")
 
+        self.ui.actNeu.setShortcut(QtGui.QKeySequence("Ctrl+N"))
+        self.ui.actOpen.setShortcut(QtGui.QKeySequence("Ctrl+O"))
+
         self.ui.tabMitglied.removeTab(0) #soll leer sein
         self.newMemberId = 0
         self.smtpPassword = None
@@ -214,16 +217,31 @@ class Main(QtGui.QMainWindow):
             settings.endGroup()
             return None
 
+    def setTitle(self):
+        self.setWindowTitle("Mitgliederverwaltung - " + self.dbfile)
+
+    def initDb(self, dbfile):
+        '''benutze übergebene Sqite-Db'''
+        self.dbfile = str(dbfile)
+        self.setTitle()
+        self.setDBSettings()
+        #alle offenen Tabs schliessen
+        self.closeAllTabs()
+        elixir.session.close()
+        # mit neuer DB verbinden
+        self.connectDb()
+        self.initDataFromDB()
+
     def connectDb(self):
         '''Verbindung mit DB aufbauen'''
         if self.dbfile == None:
             mySettings = self.getDBSettings()
-            self.__debug(str(self.dbfile))
 
             if not mySettings:
-                self.on_actVerbindung_triggered()
+                self.on_actOpen_triggered()
 
-        if self.dbfile != None: #"verein.db"
+        if self.dbfile != None:
+            self.setTitle()
             db = QtSql.QSqlDatabase.addDatabase("QSQLITE")
             db.setDatabaseName(self.dbfile)
             ok = db.open()
@@ -727,7 +745,7 @@ class Main(QtGui.QMainWindow):
         self.showLookupTableDialog("schreibenart", [None, "Art des Schreibens"])
 
     @QtCore.pyqtSlot()
-    def on_actInitialisieren_triggered(self):
+    def on_actInitialize_triggered(self):
         elixir.create_all() # Tabellen anlegen
 
         # einige Werte anlegen, falls die DB leer ist
@@ -823,23 +841,19 @@ class Main(QtGui.QMainWindow):
         self.setSMTPSettings()
 
     @QtCore.pyqtSlot()
-    def on_actVerbindung_triggered(self):
+    def on_actOpen_triggered(self):
         dbfile = QtGui.QFileDialog.getOpenFileName(self, u"Datendatei öffnen",
             filter = "Datendatei (*.db)")
+        if dbfile != "":
+            self.initDb(dbfile)
 
-        if dbfile == "":
-            dbfile = QtGui.QFileDialog.getSaveFileName(self, u"Datendatei anlegen",
-                filter = "Datendatei (*.db)")
+    @QtCore.pyqtSlot()
+    def on_actNeu_triggered(self):
+        dbfile = QtGui.QFileDialog.getSaveFileName(self, u"Datendatei anlegen",
+            filter = "Datendatei (*.db)")
 
         if dbfile != "":
-            self.dbfile = str(dbfile)
-            self.setDBSettings()
-            #alle offenen Tabs schliessen
-            self.closeAllTabs()
-            elixir.session.close()
-            # mit neuer DB verbinden
-            self.connectDb()
-            self.initDataFromDB()
+            self.initDb(dbfile)
 
     @QtCore.pyqtSlot(name="on_actBeenden_triggered")
     def on_actBeenden_triggered(self):

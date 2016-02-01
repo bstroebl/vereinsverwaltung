@@ -45,7 +45,7 @@
      <x>0</x>
      <y>0</y>
      <width>647</width>
-     <height>20</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="mnuDatei">
@@ -54,7 +54,7 @@
     </property>
     <widget class="QMenu" name="mnuEinstellungen">
      <property name="title">
-      <string>Einstellungen</string>
+      <string>&amp;Einstellungen</string>
      </property>
      <widget class="QMenu" name="mnuMitglied_Adresse">
       <property name="title">
@@ -87,13 +87,6 @@
       <addaction name="actBank"/>
       <addaction name="actHinweisZahlung"/>
      </widget>
-     <widget class="QMenu" name="menuDatenbank">
-      <property name="title">
-       <string>Datenbank</string>
-      </property>
-      <addaction name="actVerbindung"/>
-      <addaction name="actInitialisieren"/>
-     </widget>
      <widget class="QMenu" name="menuSchreiben">
       <property name="title">
        <string>Schreiben</string>
@@ -120,10 +113,13 @@
      <addaction name="mnuZahlung"/>
      <addaction name="menuSchreiben"/>
      <addaction name="separator"/>
-     <addaction name="menuDatenbank"/>
      <addaction name="menuMailserver"/>
     </widget>
     <addaction name="mnuEinstellungen"/>
+    <addaction name="separator"/>
+    <addaction name="actOpen"/>
+    <addaction name="actNeu"/>
+    <addaction name="actInitialize"/>
     <addaction name="separator"/>
     <addaction name="actBeenden"/>
    </widget>
@@ -140,7 +136,7 @@
     </property>
     <widget class="QMenu" name="menuSpezial">
      <property name="title">
-      <string>Spezial</string>
+      <string>&amp;Spezial</string>
      </property>
      <addaction name="actSpendenbescheinigung"/>
      <addaction name="actLastschrift"/>
@@ -450,12 +446,12 @@
   </action>
   <action name="actSpendenbescheinigung">
    <property name="text">
-    <string>Spendenbescheinigung</string>
+    <string>&amp;Spendenbescheinigung</string>
    </property>
   </action>
   <action name="actMahnung">
    <property name="text">
-    <string>Mahnung</string>
+    <string>&amp;Mahnung</string>
    </property>
   </action>
   <action name="actSpeicherpfad">
@@ -485,7 +481,7 @@
   </action>
   <action name="actDatenblatt">
    <property name="text">
-    <string>Datenblatt</string>
+    <string>&amp;Datenblatt</string>
    </property>
   </action>
   <action name="actSEPA_Umstellung">
@@ -495,7 +491,28 @@
   </action>
   <action name="actLastschrift">
    <property name="text">
-    <string>Ankündigung Lastschrift</string>
+    <string>Ankündigung &amp;Lastschrift</string>
+   </property>
+  </action>
+  <action name="actOpen">
+   <property name="text">
+    <string>&amp;Öffnen...</string>
+   </property>
+  </action>
+  <action name="actNeu">
+   <property name="text">
+    <string>&amp;Neu...</string>
+   </property>
+   <property name="shortcut">
+    <string/>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::WindowShortcut</enum>
+   </property>
+  </action>
+  <action name="actInitialize">
+   <property name="text">
+    <string>&amp;Initialisieren</string>
    </property>
   </action>
  </widget>
