@@ -264,7 +264,7 @@ class MemberData(QtGui.QWidget):
         #editDelegate, here comboBox
         hinweisDelegate = QtSql.QSqlRelationalDelegate(self.ui.tblEmail)
         self.ui.tblEmail.setItemDelegateForColumn(3, hinweisDelegate)
-        
+
         QtCore.QObject.connect(emailModel,
                                QtCore.SIGNAL("beforeInsert(QSqlRecord&)"),
                                self.beforeInsertRec)
@@ -292,7 +292,7 @@ class MemberData(QtGui.QWidget):
         #editDelegate, here comboBox
         hinweisDelegate = QtSql.QSqlRelationalDelegate(self.ui.tblTelefon)
         self.ui.tblTelefon.setItemDelegateForColumn(3, hinweisDelegate)
-        
+
         QtCore.QObject.connect(model,
                                QtCore.SIGNAL("beforeInsert(QSqlRecord&)"),
                                self.beforeInsertRec)
@@ -331,7 +331,7 @@ class MemberData(QtGui.QWidget):
         QtCore.QObject.connect(model,
                                QtCore.SIGNAL("dataChanged(QModelIndex, QModelIndex)"),
                                self.on_zahlungen_dataChanged)
-                               
+
         QtCore.QObject.connect(model,
                                QtCore.SIGNAL("beforeInsert(QSqlRecord&)"),
                                self.beforeInsertRec)
@@ -417,7 +417,7 @@ class MemberData(QtGui.QWidget):
 
         if self.saveToDb(): # creates a memberId on INSERT
             displayname = self.mitglied.mitgliedsname
-            
+
             if self.mitglied.vorname:
                 displayname = self.mitglied.vorname + " " + displayname
 
@@ -524,7 +524,7 @@ class MemberData(QtGui.QWidget):
         newRec.setGenerated("id", False) # muß sein für Qt 4.8
         #https://bugreports.qt-project.org/browse/QTBUG-23592?page=com.atlassian.jira.plugin.system.issuetabpanels:all-tabpanel
         # http://stackoverflow.com/questions/10147343/qsqlrecord-sets-column-with-default-value-to-null-in-query
-        
+
     @QtCore.pyqtSlot(bool)
     def on_radOrtCbx_toggled(self, isChecked):
         self.ui.cbxOrt.setEnabled(isChecked)
@@ -640,16 +640,16 @@ class MemberData(QtGui.QWidget):
     def on_radNatuerlichePerson_clicked(self):
         self.legalMember.hide()
         self.naturalMember.show()
-        self.ui.radNatuerlichePerson.setVisible(False)
-        self.ui.radJuristischePerson.setVisible(False)
+       # self.ui.radNatuerlichePerson.setVisible(False)
+        #self.ui.radJuristischePerson.setVisible(False)
         self.isNaturalMember = True
 
     @QtCore.pyqtSlot()
     def on_radJuristischePerson_clicked(self):
         self.naturalMember.hide()
         self.legalMember.show()
-        self.ui.radNatuerlichePerson.setVisible(False)
-        self.ui.radJuristischePerson.setVisible(False)
+        #self.ui.radNatuerlichePerson.setVisible(False)
+        #self.ui.radJuristischePerson.setVisible(False)
         self.isNaturalMember = False
 
     def cbxValueFromInt(self, cbx, thisInt):
@@ -988,7 +988,7 @@ class MemberData(QtGui.QWidget):
                     bank = datamodel.Bank(blz=blz, bank = self.nonify(self.ui.txlInstitut))
             else:
                 bank = None
-            
+
             iban = self.nonify(self.ui.txlIban)
             bic = self.nonify(self.ui.txlBic)
             einzugsermaechtigungsDatum = self.ui.dateEinzugsermaechtigung.date()
