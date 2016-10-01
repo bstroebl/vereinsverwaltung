@@ -842,15 +842,15 @@ class Main(QtGui.QMainWindow):
 
     @QtCore.pyqtSlot()
     def on_actOpen_triggered(self):
-        dbfile = QtGui.QFileDialog.getOpenFileName(self, u"Datendatei öffnen",
-            filter = "Datendatei (*.db)")
+        dbfile = QtGui.QFileDialog.getOpenFileName(self, u"Mitgliederkartei öffnen",
+            filter = "Mitgliederkartei (*.db)")
         if dbfile != "":
             self.initDb(dbfile)
 
     @QtCore.pyqtSlot()
     def on_actNeu_triggered(self):
-        dbfile = QtGui.QFileDialog.getSaveFileName(self, u"Datendatei anlegen",
-            filter = "Datendatei (*.db)")
+        dbfile = QtGui.QFileDialog.getSaveFileName(self, u"Mitgliederkartei anlegen",
+            filter = "Mitgliederkartei (*.db)")
 
         if dbfile != "":
             self.initDb(dbfile)
