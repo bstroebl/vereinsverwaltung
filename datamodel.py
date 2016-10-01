@@ -122,7 +122,7 @@ class Mitglied(elixir.Entity):
     elixir.using_options(tablename = 'mitglied', inheritance = 'multi')
     mitgliedsnummer = elixir.Field(elixir.Integer, primary_key = True, colname = 'id')
     mitgliedsname = elixir.Field(elixir.Unicode(255), required = True)
-    vorname = elixir.Field(elixir.Unicode(255), required = True)
+    vorname = elixir.Field(elixir.Unicode(255), required = False)
     hinweise = elixir.Field(elixir.Unicode(255),  required = False)
     mitgliedsgruppe = elixir.ManyToOne('Mitgliedsgruppe')
     eintrittsdatum = elixir.Field(elixir.Date, required = True)
