@@ -798,7 +798,8 @@ class Main(QtGui.QMainWindow):
             newSuchkriterium = datamodel.Suchkriterium( \
                 suchkriterium = u'ausgetretene Mitglieder verbergen')
             newSuchkriterium.abfrage = \
-                '(austrittsdatum <= current_date) OR (austrittsdatum IS NULL)'
+                '(austrittsdatum <= date(\'now\')) OR (austrittsdatum IS NULL)'
+            # SQLite-Datumsfunktionen https://www.sqlite.org/lang_datefunc.html
             newSuchkriterium = datamodel.Suchkriterium( \
                 suchkriterium = u'nur Mitglieder')
             newSuchkriterium.abfrage = \
