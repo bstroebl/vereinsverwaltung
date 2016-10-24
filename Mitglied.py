@@ -1213,10 +1213,27 @@ class Main(QtGui.QMainWindow):
         thisMitglied = datamodel.Mitglied.get_by(mitgliedsnummer = thisMitgliedsnummer)
 
         newSchreiben.mitglieder = [thisMitglied]
-        thisText = u"Liebes Mitglied, \n\nder Kaleidoskop e.V. hat folgende Daten von Ihnen erfasst:"
+        natMitglied = self.isNaturalMember(thisMitgliedsnummer)
+
+        if natMitglied:
+            if thisMitglied.anrede.anrede == "Frau":
+                thisText = u"Sehr geehrte Frau"
+            else:
+                thisText = u"Sehr geehrter Herr"
+
+            if thisMitglied.titel != None:
+                thisText += " " + thisMitglied.titel
+
+            if thisMitglied.namenszusatz != None:
+                thisText += " " + thisMitglied.namenszusatz
+
+            thisText += " " + thisMitglied.mitgliedsname + ","
+        else:
+            thisText = u"Sehr geehrter " + thisMitglied.ansprechpartner + ","
+
+        thisText += u"\n\nder Kaleidoskop e.V. hat folgende Daten von Ihnen erfasst:"
         thisText = thisText + u"\n\n1) Stammdaten"
         thisText = thisText + u"\nMitgliedsnummer: " + str(thisMitgliedsnummer) + "\n"
-        natMitglied = self.isNaturalMember(thisMitgliedsnummer)
 
         if  natMitglied:
             thisText = thisText + thisMitglied.anrede.anrede
@@ -1282,7 +1299,6 @@ class Main(QtGui.QMainWindow):
         thisText = thisText + u"\nZahlweise: " + thisMitglied.zahlweise.zahlweise
         thisText = thisText + u"\nZahlungsart: " + thisMitglied.zahlungsart.zahlungsart
 
-
         if thisMitglied.zahlungsart.zahlungsart == u"Bankeinzug":
             thisText = thisText + u"\nBankverbindung:"
             thisText = thisText + u"\nIBAN: " + str(thisMitglied.iban)
@@ -1303,7 +1319,6 @@ class Main(QtGui.QMainWindow):
             u"Bernhard Ströbl"
 
         newSchreiben.text = thisText
-
         self.makeSchreiben(newSchreiben, True,  None,  noEmail)
 
     @QtCore.pyqtSlot()
