@@ -788,6 +788,8 @@ class MemberData(QtGui.QWidget):
     def manageAustrittsdatum(self, austrittsdatum = None):
         if not austrittsdatum:
             austrittsdatum = QtCore.QDate(2099, 12, 31)
+        else:
+            austrittsdatum = QtCore.QDate(austrittsdatum)
 
         self.ui.dateAustrittsDatum.setDate(austrittsdatum)
 
