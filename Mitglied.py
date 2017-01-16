@@ -1231,7 +1231,9 @@ class Main(QtGui.QMainWindow):
         else:
             thisText = u"Sehr geehrter " + thisMitglied.ansprechpartner + ","
 
-        thisText += u"\n\nder Kaleidoskop e.V. hat folgende Daten von Ihnen erfasst:"
+        thisText += u"\n\nSie sind dem Kaleidoskop e.V. beigetreten. " + \
+            u"Da laut Satzung der Vorstand über die Aufnahme der Mitglieder entscheidet, "+ \
+            u"hat sich die Aufnahme leider bis nach der letzten Vorstandssitzung verzögert. \nWir haben folgende Daten von Ihnen erfasst:"
         thisText = thisText + u"\n\n1) Stammdaten"
         thisText = thisText + u"\nMitgliedsnummer: " + str(thisMitgliedsnummer) + "\n"
 
