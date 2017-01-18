@@ -37,7 +37,6 @@ import smtplib
 import mimetypes
 from email import MIMEText, Header, MIMEMultipart, MIMEAudio, MIMEBase, MIMEImage, encoders
 #from sqlalchemy import select
-import zqt
 from member import MemberData
 
 class Main(QtGui.QMainWindow):

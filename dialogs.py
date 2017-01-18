@@ -20,7 +20,6 @@ email                : b.stroebl@stroweb.de
 """
 
 from PyQt4 import QtCore, QtGui, QtSql, QtXml
-import zqt
 from Ui_LookupTable import Ui_LookupTable
 from Ui_Verbindung import Ui_Verbindung
 from Ui_Schreiben import Ui_Schreiben
@@ -323,6 +322,12 @@ class SchreibenDialog(QtGui.QDialog):
 
         self.initializeValues()
 
+    def cbxValueFromText(self, cbx, thisText):
+        for i in range( cbx.count() ):
+            if cbx.itemText( i ) == thisText:
+                cbx.setCurrentIndex( i )
+                break
+
     def initializeValues(self):
         for schreibenArt in datamodel.Schreibenart.query.order_by(\
                     datamodel.Schreibenart.schreibenart).all():
@@ -331,7 +336,7 @@ class SchreibenDialog(QtGui.QDialog):
                 self.ui.cbxArt.addItem(schreibenArt.schreibenart)
 
         if self.schreiben.art:
-            zqt.cbxValueFromText(self.ui.cbxArt, self.schreiben.art.schreibenart)
+            self.cbxValueFromText(self.ui.cbxArt, self.schreiben.art.schreibenart)
         else:
             self.ui.cbxArt.setCurrentIndex(0)
 
@@ -350,10 +355,10 @@ class SchreibenDialog(QtGui.QDialog):
             self.ui.txlTitel.setText(self.schreiben.titel)
 
         if self.schreiben.text:
-            
+
             if self.schreiben.art == "Brief":
                 self.ui.txtText.setHtml(QtCore.QString(self.schreiben.text))
-            else:    
+            else:
                 self.ui.txtText.setText(QtCore.QString(self.schreiben.text))
 
         self.ui.lstAnhang.clear()
@@ -424,12 +429,12 @@ class SchreibenDialog(QtGui.QDialog):
     def accept(self):
         self.schreiben.titel = unicode(self.ui.txlTitel.text())
         thisSchreibenart = unicode(self.ui.cbxArt.currentText())
-        
+
         if thisSchreibenart == "Email":
             text = self.ui.txtText.toPlainText()
         else:
             text = self.ui.txtText.toHtml()
-        
+
         self.schreiben.text = unicode(text)
         schreibenArt = datamodel.Schreibenart.get_by(schreibenart = thisSchreibenart)
         self.schreiben.art = schreibenArt

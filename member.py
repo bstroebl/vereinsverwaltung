@@ -29,7 +29,6 @@ import resources_rc
 import datamodel
 import elixir
 from sqlalchemy import and_
-import zqt
 
 class RadioButtonDelegate(QtGui.QStyledItemDelegate):
     '''Delegate, zur Eingabe von 0 = Falsch 1 = Wahr -
