@@ -1,5 +1,4 @@
 *.pyc
-Ui*.py
 .eric4project/
 .eric5project/
 .eric6project/
