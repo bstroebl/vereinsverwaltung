@@ -18,7 +18,7 @@ einzugsermaechtigungsdatum,
 eintrittsdatum
 from mitglied m
 where beitragsgruppe_id = 1 
-and eintrittsdatum <= date('2016-01-01')
+and eintrittsdatum < date('2016-01-01')
 and (austrittsdatum IS NULL or austrittsdatum between date('2015-01-01') and date('2015-12-31'))
 and zahlungsart_id = 2
 order by mitgliedsname, vorname 
